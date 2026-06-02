@@ -1,14 +1,13 @@
--- ================================================================
+
 -- LogiTrack — Logistics and Delivery Analytics
 -- SECTION 8 — INDEXES AND EXPLAIN
--- ================================================================
+
 
 USE logitrack;
 
--- ================================================================
 -- INDEX 1: composite (warehouse_id, pickup_date)
 -- Supports QUERY 6: filter deliveries by warehouse + date range.
--- ================================================================
+
 
 -- EXPLAIN BEFORE index:
 EXPLAIN
@@ -38,12 +37,9 @@ WHERE warehouse_id = 1
 -- (no DATE() wrapper) ensures the B-Tree index is fully utilized.
 -- Result: rows examined drops from 350 to ~8.
 
-
--- ================================================================
 -- INDEX 2: composite (route_id, status, delay_minutes)
 -- Supports QUERY 3: find routes where delayed > on-time deliveries.
 -- Also useful for any query that filters by route + status.
--- ================================================================
 
 -- EXPLAIN BEFORE index (Query 3 pattern):
 EXPLAIN

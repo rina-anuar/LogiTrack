@@ -1,15 +1,13 @@
--- ================================================================
+
 -- LogiTrack — Logistics and Delivery Analytics
 -- SECTION 7 — TRANSACTIONS (COMMIT example + ROLLBACK example)
--- ================================================================
 
 USE logitrack;
 
--- ================================================================
+
 -- 7A. COMMIT example
--- Business scenario: atomically create a new shipment AND its
--- delivery. Both rows must be saved together or not at all.
--- ================================================================
+-- Business scenario: atomically create a new shipment AND its delivery. Both rows must be saved together or not at all.
+
 
 START TRANSACTION;
 
@@ -32,12 +30,11 @@ COMMIT;
 SELECT * FROM shipments WHERE description = 'Transaction demo shipment';
 
 
--- ================================================================
+
 -- 7B. ROLLBACK example
--- Business scenario: we start creating a shipment, but before
--- completing the full operation we decide to cancel everything.
+-- Business scenario: we start creating a shipment, but before completing the full operation we decide to cancel everything.
 -- ROLLBACK undoes all changes made inside the transaction.
--- ================================================================
+
 
 START TRANSACTION;
 

@@ -1,16 +1,14 @@
--- ================================================================
+
 -- LogiTrack — Logistics and Delivery Analytics
--- SECTION 4 — ANALYTICAL QUERIES (exactly 6)
--- ================================================================
+-- SECTION 4 — ANALYTICAL QUERIES 
+
 
 USE logitrack;
 
--- ----------------------------------------------------------------
 -- QUERY 1
--- Top 5 drivers with highest number of on-time deliveries
--- and their average delivery duration (in hours).
--- Demonstrates: JOIN, aggregation, filtering, ORDER BY + LIMIT.
--- ----------------------------------------------------------------
+-- Top 5 drivers with highest number of on-time deliveries and their average delivery duration (in hours).
+
+
 SELECT
     d.driver_id,
     CONCAT(d.first_name, ' ', d.last_name)                                          AS driver_name,
@@ -25,12 +23,9 @@ GROUP BY d.driver_id, d.first_name, d.last_name
 ORDER BY on_time_deliveries DESC, avg_duration_hours ASC
 LIMIT 5;
 
--- ----------------------------------------------------------------
 -- QUERY 2
--- Warehouses whose AVERAGE delivery delay is higher than the
--- overall company-wide average delay.
--- Demonstrates: nested subquery in HAVING, aggregation, JOIN.
--- ----------------------------------------------------------------
+-- Warehouses whose AVERAGE delivery delay is higher than the overall company-wide average delay.
+
 SELECT
     w.warehouse_id,
     w.warehouse_name,
@@ -44,13 +39,11 @@ HAVING AVG(dl.delay_minutes) > (
 )
 ORDER BY avg_delay_minutes DESC;
 
--- ----------------------------------------------------------------
+
 -- QUERY 3
--- Routes where the number of DELAYED deliveries is greater than
--- the number of ON-TIME deliveries.
--- Demonstrates: conditional aggregation with CASE inside SUM,
--- HAVING with comparison of two aggregates, JOIN to cities.
--- ----------------------------------------------------------------
+-- Routes where the number of DELAYED deliveries is greater than the number of ON-TIME deliveries.
+
+
 SELECT
     r.route_id,
     co.city_name              AS origin_city,
@@ -66,12 +59,10 @@ GROUP BY r.route_id, co.city_name, cd.city_name
 HAVING delayed_count > on_time_count
 ORDER BY delayed_count DESC;
 
--- ----------------------------------------------------------------
+
 -- QUERY 4
--- Rank cities (as shipment ORIGINS) by total shipment volume
--- using a WINDOW FUNCTION.
--- Demonstrates: window function RANK() OVER (...), JOINs.
--- ----------------------------------------------------------------
+-- Rank cities (as shipment ORIGINS) by total shipment volume using a WINDOW FUNCTION.
+
 SELECT
     c.city_id,
     c.city_name,
@@ -106,12 +97,9 @@ FROM deliveries
 GROUP BY performance_category
 ORDER BY delivery_count DESC;
 
--- ----------------------------------------------------------------
 -- QUERY 6
--- Performance: filter deliveries by warehouse_id + date range.
--- Uses index-friendly range condition (no DATE() wrapper on column).
--- The composite index is created in SECTION 8.
--- ----------------------------------------------------------------
+-- Performance: filter deliveries by warehouse_id + date range. Uses index-friendly range condition (no DATE() wrapper on column).
+
 SELECT delivery_id, shipment_id, driver_id, status, delay_minutes, actual_date
 FROM deliveries
 WHERE warehouse_id = 1

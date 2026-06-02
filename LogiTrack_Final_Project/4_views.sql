@@ -1,11 +1,10 @@
--- ================================================================
+
 -- LogiTrack — Logistics and Delivery Analytics
 -- SECTION 5 — VIEWS
--- ================================================================
 
 USE logitrack;
 
--- ---------- VIEW 1: driver_performance_view ----------
+--  VIEW 1: driver_performance_view 
 CREATE OR REPLACE VIEW driver_performance_view AS
 SELECT
     d.driver_id,
@@ -24,7 +23,7 @@ GROUP BY d.driver_id, d.first_name, d.last_name, d.rating;
 -- Example use:
 SELECT * FROM driver_performance_view ORDER BY on_time_deliveries DESC LIMIT 10;
 
--- ---------- VIEW 2: warehouse_performance_view ----------
+--  VIEW 2: warehouse_performance_view 
 CREATE OR REPLACE VIEW warehouse_performance_view AS
 SELECT
     w.warehouse_id,

@@ -1,10 +1,10 @@
--- ================================================================
+
 -- LogiTrack — Logistics and Delivery Analytics
 -- SECTION 6 — TRIGGER
 -- After UPDATE on deliveries.status -> write audit log entry.
 -- Useful: keeps a full history of state transitions for any
 -- delivery, supports SLA disputes and operational analytics.
--- ================================================================
+
 
 USE logitrack;
 

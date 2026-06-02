@@ -7,7 +7,7 @@
 USE logitrack;
 
 
--- ---------- 1. cities (60 rows) ----------
+--  1. cities (60 rows) 
 INSERT INTO cities (city_name, region, country, population) VALUES
 ('Almaty','Almaty','Kazakhstan',2000000),
 ('Astana','Astana','Kazakhstan',1200000),
@@ -70,7 +70,7 @@ INSERT INTO cities (city_name, region, country, population) VALUES
 ('Zhetisay','Turkestan','Kazakhstan',35000),
 ('Kandyagash','Aktobe','Kazakhstan',28000);
 
--- ---------- 2. warehouses (50 rows) ----------
+--  2. warehouses (50 rows) 
 INSERT INTO warehouses (warehouse_name, city_id, address, capacity_kg, opened_date) VALUES
 ('Almaty Central Hub',1,'Tole Bi St 59',5000,'2018-03-15'),
 ('Almaty South Depot',1,'Raiymbek Ave 221',3000,'2020-06-01'),
@@ -123,7 +123,7 @@ INSERT INTO warehouses (warehouse_name, city_id, address, capacity_kg, opened_da
 ('Samarkand Partner Depot',37,'Registan St 55',1000,'2022-11-01'),
 ('Kazan Transit Hub',50,'Tatarstan Ave 22',1600,'2021-12-05');
 
--- ---------- 3. vehicle_types (6 rows) ----------
+--  3. vehicle_types (6 rows) 
 INSERT INTO vehicle_types (type_name, max_weight_kg, max_volume_m3) VALUES
 ('Motorcycle Courier',50.00,0.20),
 ('Small Van',800.00,4.00),
@@ -132,7 +132,7 @@ INSERT INTO vehicle_types (type_name, max_weight_kg, max_volume_m3) VALUES
 ('Refrigerated Truck',8000.00,35.00),
 ('Heavy Freight',20000.00,80.00);
 
--- ---------- 4. vehicles (80 rows) ----------
+--  4. vehicles (80 rows) 
 INSERT INTO vehicles (plate_number, type_id, warehouse_id, year_produced, is_active) VALUES
 ('01A001AA',2,1,2020,TRUE),('01A002AB',3,1,2019,TRUE),
 ('01A003AC',4,1,2021,TRUE),('01A004AD',5,1,2022,TRUE),
@@ -175,7 +175,7 @@ INSERT INTO vehicles (plate_number, type_id, warehouse_id, year_produced, is_act
 ('01A015AO',5,1,2022,TRUE),('01A016AP',3,2,2023,TRUE),
 ('02B011AK',4,3,2022,TRUE),('02B012AL',5,4,2023,TRUE);
 
--- ---------- 5. drivers (70 rows) ----------
+--  5. drivers (70 rows) 
 INSERT INTO drivers (first_name, last_name, phone, license_number, hire_date, warehouse_id, city_id, rating) VALUES
 ('Aibek','Nursultanov','+77001110001','KZ-DL-000001','2019-02-10',1,1,4.85),
 ('Daulet','Kairatov','+77001110002','KZ-DL-000002','2020-05-15',1,1,4.72),
@@ -248,7 +248,7 @@ INSERT INTO drivers (first_name, last_name, phone, license_number, hire_date, wa
 ('Miras','Tugelbaev','+77001110069','KZ-DL-000069','2019-11-28',29,56,4.42),
 ('Oral','Dauletbaev','+77001110070','KZ-DL-000070','2021-05-16',30,32,4.68);
 
--- ---------- 6. clients (80 rows) ----------
+--  6. clients (80 rows) 
 INSERT INTO clients (company_name, contact_person, email, phone, city_id) VALUES
 ('TechnoMart KZ','Aidar Baev','info@technomart.kz','+77012220001',1),
 ('Sulpak','Murat Isaev','logistics@sulpak.kz','+77012220002',1),
@@ -354,7 +354,7 @@ INSERT INTO routes (origin_city_id, dest_city_id, distance_km, est_duration_hour
 (8,24,120,1.5),(24,8,120,1.5),(4,22,400,4.5),(22,4,400,4.5),
 (4,30,550,6.5),(30,4,550,6.5),(2,9,700,8.0),(9,2,700,8.0);
 
--- ---------- 8. shipments (350 rows via numbers helper) ----------
+--  8. shipments (350 rows via numbers helper) 
 -- Helper table for generating numeric series
 INSERT INTO shipments (
     client_id, warehouse_id, weight_kg, volume_m3,
@@ -399,7 +399,7 @@ SELECT
 FROM nums a
 CROSS JOIN nums b
 WHERE ((a.n - 1) * 50 + b.n) <= 350;
--- ---------- 9. deliveries (350 rows with diverse statuses) ----------
+--  9. deliveries (350 rows with diverse statuses) 
 -- For each shipment we create one delivery.
 -- Status distribution is realistic: ~70% delivered, ~18% delayed, ~7% failed, ~5% in_transit
 
@@ -440,7 +440,7 @@ SELECT
 FROM shipments s;
 
 
--- ---------- 10. delivery_status_log (initial seed) ----------
+--  10. delivery_status_log (initial seed) 
 INSERT INTO delivery_status_log (delivery_id, old_status, new_status, changed_by)
 SELECT delivery_id, NULL, status, 'system_init' FROM deliveries LIMIT 50;
 

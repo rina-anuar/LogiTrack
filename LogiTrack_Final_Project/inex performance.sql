@@ -1,18 +1,12 @@
--- ================================================================
+
 -- LogiTrack — Logistics and Delivery Analytics
 -- SECTION 8 — INDEXES AND EXPLAIN ANALYZE (Performance Testing)
--- ================================================================
 
 USE logitrack;
 
--- Note: Your indexes are already created successfully!
--- We will use IGNORE INDEX to simulate the "Before" state, 
--- and normal queries to show the "After" state.
 
-
--- ================================================================
 -- TEST 1: QUERY 6 (Warehouse + Date Range)
--- ================================================================
+
 
 SELECT '--- EXPLAIN ANALYZE: BEFORE INDEX (Simulated Table Scan) ---' AS Test_Phase;
 
@@ -36,9 +30,8 @@ WHERE warehouse_id = 1
   AND pickup_date <  '2026-01-01';
 
 
--- ================================================================
 -- TEST 2: QUERY 3 (Route + Status conditional aggregation)
--- ================================================================
+
 
 SELECT '--- EXPLAIN ANALYZE: BEFORE INDEX 2 (Simulated) ---' AS Test_Phase;
 

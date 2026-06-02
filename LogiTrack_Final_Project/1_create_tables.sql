@@ -10,7 +10,7 @@ CREATE DATABASE logitrack
     COLLATE utf8mb4_unicode_ci;
 USE logitrack;
 
--- ---------- 1. cities ----------
+-- 1. cities 
 CREATE TABLE cities (
     city_id     INT AUTO_INCREMENT PRIMARY KEY,
     city_name   VARCHAR(100) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE cities (
     CONSTRAINT chk_city_population CHECK (population > 0)
 ) ENGINE=InnoDB;
 
--- ---------- 2. warehouses ----------
+-- 2. warehouses 
 CREATE TABLE warehouses (
     warehouse_id   INT AUTO_INCREMENT PRIMARY KEY,
     warehouse_name VARCHAR(150) NOT NULL UNIQUE,
@@ -33,7 +33,7 @@ CREATE TABLE warehouses (
     CONSTRAINT chk_wh_capacity CHECK (capacity_kg > 0)
 ) ENGINE=InnoDB;
 
--- ---------- 3. vehicle_types ----------
+--  3. vehicle_types
 CREATE TABLE vehicle_types (
     type_id       INT AUTO_INCREMENT PRIMARY KEY,
     type_name     VARCHAR(50) NOT NULL UNIQUE,
@@ -43,7 +43,7 @@ CREATE TABLE vehicle_types (
     CONSTRAINT chk_vt_volume CHECK (max_volume_m3 > 0)
 ) ENGINE=InnoDB;
 
--- ---------- 4. vehicles ----------
+--4. vehicles 
 CREATE TABLE vehicles (
     vehicle_id    INT AUTO_INCREMENT PRIMARY KEY,
     plate_number  VARCHAR(20) NOT NULL UNIQUE,
@@ -56,7 +56,7 @@ CREATE TABLE vehicles (
     CONSTRAINT chk_v_year CHECK (year_produced BETWEEN 1990 AND 2026)
 ) ENGINE=InnoDB;
 
--- ---------- 5. drivers ----------
+--  5. drivers 
 CREATE TABLE drivers (
     driver_id      INT AUTO_INCREMENT PRIMARY KEY,
     first_name     VARCHAR(50) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE drivers (
     CONSTRAINT chk_d_rating CHECK (rating BETWEEN 1.00 AND 5.00)
 ) ENGINE=InnoDB;
 
--- ---------- 6. clients ----------
+-- 6. clients 
 CREATE TABLE clients (
     client_id      INT AUTO_INCREMENT PRIMARY KEY,
     company_name   VARCHAR(200) NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE clients (
     CONSTRAINT fk_c_city FOREIGN KEY (city_id) REFERENCES cities(city_id)
 ) ENGINE=InnoDB;
 
--- ---------- 7. routes ----------
+-- 7. routes 
 CREATE TABLE routes (
     route_id           INT AUTO_INCREMENT PRIMARY KEY,
     origin_city_id     INT NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE routes (
     CONSTRAINT chk_r_different CHECK (origin_city_id <> dest_city_id)
 ) ENGINE=InnoDB;
 
--- ---------- 8. shipments ----------
+--  8. shipments 
 CREATE TABLE shipments (
     shipment_id  INT AUTO_INCREMENT PRIMARY KEY,
     client_id    INT NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE shipments (
     CONSTRAINT chk_s_priority CHECK (priority IN ('low','normal','high','urgent'))
 ) ENGINE=InnoDB;
 
--- ---------- 9. deliveries ----------
+-- 9. deliveries
 CREATE TABLE deliveries (
     delivery_id    INT AUTO_INCREMENT PRIMARY KEY,
     shipment_id    INT NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE deliveries (
     CONSTRAINT chk_dl_cost   CHECK (delivery_cost > 0)
 ) ENGINE=InnoDB;
 
--- ---------- 10. delivery_status_log (audit) ----------
+--  10. delivery_status_log (audit) 
 CREATE TABLE delivery_status_log (
     log_id      INT AUTO_INCREMENT PRIMARY KEY,
     delivery_id INT NOT NULL,
