@@ -1,0 +1,96 @@
+-- ================================================================
+-- LogiTrack — Logistics and Delivery Analytics
+-- SECTION 10 — SHORT EXPLANATION
+-- ================================================================
+-- This file contains the design documentation for the LogiTrack
+-- database project. It is documentation only; there are no
+-- executable SQL statements here.
+
+-- TABLE DESIGN
+-- ------------
+-- 10 tables split into 3 logical layers:
+--   * Reference: cities, warehouses, vehicle_types, vehicles,
+--                drivers, clients, routes
+--   * Transactional: shipments, deliveries
+--   * Audit: delivery_status_log
+-- Every entity has a single-column surrogate INT PK named <entity>_id.
+--
+-- RELATIONSHIPS (16 foreign keys)
+-- -------------------------------
+--   warehouses → cities                            (1 FK)
+--   vehicles   → vehicle_types, warehouses         (2 FKs)
+--   drivers    → warehouses, cities                (2 FKs)
+--   clients    → cities                            (1 FK)
+--   routes     → cities (origin), cities (dest)    (2 FKs)
+--   shipments  → clients, warehouses               (2 FKs)
+--   deliveries → shipments, drivers, vehicles,
+--                routes, warehouses                (5 FKs)
+--   delivery_status_log → deliveries               (1 FK)
+--   Total: 1+2+2+1+2+2+5+1 = 16 foreign keys.
+--
+--   Additionally, deliveries.shipment_id has a UNIQUE constraint
+--   enforcing a 1:1 relationship between shipments and deliveries.
+--   UNIQUE composite (origin_city_id, dest_city_id) on routes
+--   prevents duplicate routes.
+--
+-- 3NF NORMALIZATION
+-- -----------------
+-- * Every non-key attribute depends only on its primary key.
+-- * No transitive dependencies: e.g. a driver's city stays in
+--   `drivers` only as a FK to `cities`, never duplicated as text.
+-- * Route metadata (distance, duration) is stored ONCE in routes
+--   and referenced from every delivery — no redundancy.
+-- * No multi-valued columns; all relations are atomic.
+--
+-- CONSTRAINTS
+-- -----------
+-- All six required constraint types are used:
+--   PRIMARY KEY        — every table.
+--   FOREIGN KEY        — 16 relationships listed above.
+--   UNIQUE             — plate_number, email, phone, license_number,
+--                        warehouse_name, shipment_id in deliveries,
+--                        (origin,dest) on routes, (city_name,country).
+--   NOT NULL           — every column where business logic requires it.
+--   DEFAULT            — country, opened_date, hire_date, registered_at,
+--                        rating, priority, status, delay_minutes.
+--   CHECK              — population>0, capacity_kg>0,
+--                        rating BETWEEN 1 AND 5,
+--                        max_weight_kg>0, max_volume_m3>0,
+--                        weight_kg>0, volume_m3>0,
+--                        distance_km>0, est_duration_hours>0,
+--                        origin_city_id <> dest_city_id,
+--                        year_produced BETWEEN 1990 AND 2026,
+--                        priority IN (...), status IN (...),
+--                        expected_date > pickup_date,
+--                        actual_date IS NULL OR actual_date >= pickup_date,
+--                        delay_minutes >= 0, delivery_cost > 0.
+--
+-- INDEXES
+-- -------
+--   idx_deliveries_wh_pickup  composite (warehouse_id, pickup_date):
+--       supports QUERY 6 that filters deliveries by warehouse and
+--       date range. Uses index-friendly range conditions.
+--   idx_deliveries_route_status_delay  composite (route_id, status, delay_minutes):
+--       supports QUERY 3 that finds routes where delayed deliveries
+--       exceed on-time deliveries. Covers JOIN + conditional aggregation.
+--
+-- TRIGGER
+-- -------
+--   trg_delivery_status_audit fires AFTER UPDATE on deliveries.
+--   If `status` was changed, the trigger inserts a row into
+--   delivery_status_log capturing old → new status, timestamp and
+--   the user that performed the change. This gives a complete
+--   audit trail for SLA disputes and operational analytics.
+--
+-- TRANSACTION SCENARIO
+-- --------------------
+--   COMMIT example  : creating a shipment together with its delivery
+--                     must be atomic — both rows inserted or none.
+--   ROLLBACK example: a shipment is inserted inside a transaction,
+--                     visible via SELECT during the transaction, then
+--                     ROLLBACK undoes it — a second SELECT after
+--                     ROLLBACK returns empty, proving atomicity.
+--
+-- ================================================================
+-- END OF LOGITRACK PROJECT
+-- ================================================================
